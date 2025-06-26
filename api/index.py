@@ -8,7 +8,7 @@ import os # Required for Vercel environment variables
 # --- Vercel Specific Flask App Initialization ---
 # The template and static folders are located in the parent directory of this 'api' folder.
 # We must specify their paths relative to the project root for Vercel to find them.
-app = Flask(__name__, template_folder='../templates', static_folder='../static')
+app = Flask(__name__)
 
 # --- Securely Connect to Google Sheets using Environment Variables ---
 def get_gspread_client():
