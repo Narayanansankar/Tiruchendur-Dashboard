@@ -6,28 +6,24 @@ import json
 import os # Required for Vercel environment variables
 
 # --- Vercel Specific Flask App Initialization ---
-# The template and static folders are located in the parent directory of this 'api' folder.
-# We must specify their paths relative to the project root for Vercel to find them.
-app = Flask(__name__)
+# Vercel Fix: Explicitly define the template folder path relative to this file's location.
+# The serverless function runs from /api, so we need to go up one level ('..') to find the /templates folder.
+app = Flask(__name__, template_folder='../templates')
 
 # --- Securely Connect to Google Sheets using Environment Variables ---
 def get_gspread_client():
     """
-    Authorizes gspread using credentials stored in a Vercel environment variable
-    named 'GOOGLE_CREDENTIALS_JSON'. This is the secure way to handle secrets.
+    Authorizes gspread using credentials stored in a Vercel environment variable.
     """
     try:
-        # Vercel will provide the environment variable's content as a string.
         creds_json_str = os.getenv("GOOGLE_CREDENTIALS_JSON")
         if not creds_json_str:
             print("FATAL ERROR: GOOGLE_CREDENTIALS_JSON environment variable not set.")
             return None
         
-        # Convert the string back into a dictionary.
         creds_json = json.loads(creds_json_str)
         
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-        # Use .from_json_keyfile_dict() to authorize from a dictionary instead of a file.
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
         client = gspread.authorize(creds)
         print("Successfully connected to Google Sheets.")
@@ -36,15 +32,10 @@ def get_gspread_client():
         print(f"Error connecting to Google Sheets: {e}")
         return None
 
-# Create the client connection once when the application starts.
 client = get_gspread_client()
 
 # --- Helper Function to Fetch and Process Live Data ---
 def get_parking_data():
-    """
-    Fetches data from the Google Sheet, cleans it, and transforms it into a
-    structured format.
-    """
     if not client: return {}
 
     try:
@@ -169,7 +160,7 @@ def parking_lot_history():
     except Exception as e: return jsonify({"error": f"Could not fetch history data: {e}"}), 500
 
     all_lots = get_parking_data()
-    lot_name = all_lots.get(lot_id_from_request, {}).get("Parking_name_en", "Unknown Lot")
+    lot_name = all_lots.get(_id_from_request, {}).get("Parking_name_en", "Unknown Lot")
     time_24_hours_ago = datetime.datetime.now() - datetime.timedelta(hours=24)
     graph_data = []
 
@@ -197,5 +188,3 @@ def parking_lot_history():
     }
     
     return jsonify({"lotName": lot_name, "datasets": [dataset]})
-
-# Note: The if __name__ == '__main__': block is removed because Vercel handles running the server.
