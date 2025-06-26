@@ -6,9 +6,9 @@ import json
 import os # Required for Vercel environment variables
 
 # --- Vercel Specific Flask App Initialization ---
-# Vercel Fix: Explicitly define the template folder path relative to this file's location.
-# The serverless function runs from /api, so we need to go up one level ('..') to find the /templates folder.
-app = Flask(__name__, template_folder='../templates')
+# Vercel Fix: Explicitly define BOTH the template and static folder paths.
+# This allows Flask's url_for() to generate the correct paths for Vercel's routing.
+app = Flask(__name__, template_folder='../templates', static_folder='../static')
 
 # --- Securely Connect to Google Sheets using Environment Variables ---
 def get_gspread_client():
@@ -160,7 +160,7 @@ def parking_lot_history():
     except Exception as e: return jsonify({"error": f"Could not fetch history data: {e}"}), 500
 
     all_lots = get_parking_data()
-    lot_name = all_lots.get(_id_from_request, {}).get("Parking_name_en", "Unknown Lot")
+    lot_name = all_lots.get(lot_id_from_request, {}).get("Parking_name_en", "Unknown Lot")
     time_24_hours_ago = datetime.datetime.now() - datetime.timedelta(hours=24)
     graph_data = []
 
