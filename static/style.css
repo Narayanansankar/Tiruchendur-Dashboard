@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* --- THEME DEFINITIONS --- */
+:root {
+    /* Light Theme (Default) */
+    --bg-color: #f4f7f6;
+    --text-color: #212529;
+    --text-secondary-color: #6c757d;
+    --card-bg-color: #ffffff;
+    --card-border-color: #dee2e6;
+    --header-border-color: #dee2e6;
+    --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    --thoothukudi-glow: 0 0 15px rgba(29, 233, 182, 0.4);
+    --tirunelveli-glow: 0 0 15px rgba(255, 145, 0, 0.4);
+    --nagercoil-glow: 0 0 15px rgba(30, 136, 229, 0.4);
+    --chart-grid-color: rgba(0, 0, 0, 0.1);
+    --progress-bg: #e9ecef;
+    --modal-bg: #ffffff;
+}
+
+[data-bs-theme="dark"] {
+    /* Dark Theme */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --text-secondary-color: #888;
+    --card-bg-color: rgba(44, 44, 64, 0.45);
+    --card-border-color: rgba(255, 255, 255, 0.125);
+    --header-border-color: #333;
+    --card-shadow: none; /* Shadow is replaced by glow in dark mode */
+    --thoothukudi-glow: 0 0 20px rgba(29, 233, 182, 0.35);
+    --tirunelveli-glow: 0 0 20px rgba(255, 145, 0, 0.35);
+    --nagercoil-glow: 0 0 20px rgba(30, 136, 229, 0.35);
+    --chart-grid-color: rgba(255, 255, 255, 0.15);
+    --progress-bg: rgba(0, 0, 0, 0.2);
+    --modal-bg: rgba(43, 43, 64, 0.75); /* More transparent for glass effect */
+}
+/* --- END THEMES --- */
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.summary-section, .route-column-wrapper, .parking-card {
+    background: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-bs-theme="dark"] .summary-section,
+[data-bs-theme="dark"] .route-column-wrapper,
+[data-bs-theme="dark"] .parking-card {
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+}
+
+.border-bottom-dynamic { border-bottom: 1px solid var(--header-border-color) !important; }
+.text-secondary-dynamic { color: var(--text-secondary-color) !important; }
+.reserved-spacer { height: 10px; background-color: var(--card-bg-color); border-radius: 5px; }
+.chart-container { position: relative; height: 300px; width: 100%; }
+.route-column-wrapper { padding: 20px; height: 100%; display: flex; flex-direction: column; }
+.route-column-title { font-size: 1.4rem; font-weight: 700; text-align: center; border-bottom: 2px solid; padding-bottom: 10px; margin-bottom: 1rem; }
+
+.thoothukudi-title { border-color: #1DE9B6; }
+.tirunelveli-title { border-color: #FF9100; }
+.nagercoil-title { border-color: #1E88E5; }
+
+.route-column-wrapper:has(#thoothukudi-lots-container) { box-shadow: var(--thoothukudi-glow); }
+.route-column-wrapper:has(#tirunelveli-lots-container) { box-shadow: var(--tirunelveli-glow); }
+.route-column-wrapper:has(#nagercoil-lots-container) { box-shadow: var(--nagercoil-glow); }
+
+.parking-card:hover { transform: translateY(-4px); }
+.parking-name { font-size: 0.95rem; }
+
+.availability-status { font-weight: bold; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 1rem; border: 1px solid; white-space: nowrap; }
+.status-available { color: #27ae60; border-color: #2ecc71; background-color: rgba(46, 204, 113, 0.15); }
+.status-unavailable { color: #c0392b; border-color: #e74c3c; background-color: rgba(231, 76, 60, 0.15); }
+
+.progress { font-size: 0.8rem; font-weight: 600; border-radius: 0.5rem; background-color: var(--progress-bg); }
+.progress-bar.bg-success { background-color: #2ecc71 !important; }
+.progress-bar.bg-warning { background-color: #f39c12 !important; }
+.progress-bar.bg-danger { background-color: #e74c3c !important; }
+
+.modal-content { background-color: var(--modal-bg); border: 1px solid var(--card-border-color); }
+[data-bs-theme="dark"] .modal-content {
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+}
+.theme-toggle-container .form-check-input { width: 3.5em; height: 1.8em; cursor: pointer; }
